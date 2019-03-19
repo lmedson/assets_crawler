@@ -14,7 +14,7 @@ Install the dependencies with pip, running:
 In file `run.py` in should set a site to crawl, like the example in line 50 of the file, and the filename and format of output. Below is the code snippet:
 
 ```python
-    # # example
+    # example
     # declaring url to get using the crawler
     url_to_scrape = 'https://elixir-lang.org/'
     new_crawler = Crawler(url_to_scrape)
@@ -28,7 +28,7 @@ In file `run.py` in should set a site to crawl, like the example in line 50 of t
 
 Make sure you have installed all the dependencies. Run the file:
 
-`$ python main.py`.
+`$ python run.py`.
 
 ## Result
 
