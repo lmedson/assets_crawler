@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import urllib.request
+from prettytable import PrettyTable
 
 
 class Crawler():
@@ -9,6 +10,9 @@ class Crawler():
         self.assets_map = []
         self.req = urllib.request.urlopen(url)
         self.soup = BeautifulSoup(self.req, features='lxml')
+        self.data = {}
+        self.start = 0
+        self.end = 0
 
     def crawl(self):
         for link in self.soup.find_all('a', href=True):
@@ -19,18 +23,31 @@ class Crawler():
             new_req = urllib.request.urlopen(page)
             new_soup = BeautifulSoup(
                 new_req, features='lxml')
-            for i in new_soup.find_all('img'):
-                alt = i.get('alt')
-                src = i.get('src')
+            for index in new_soup.find_all('img'):
+                alt = index.get('alt')
+                src = index.get('src')
                 self.assets_map.append(
-                    {'page': page, 'image': {'name': alt, 'link': self.url+src}})
+                    {'page': page, 'name_image': alt, 'link_image': self.url+src})
 
         return self.assets_map
 
+    def draw(self, filename, start, end):
+        save_file = open(filename, "w+")
+        data_to_print = self.crawl()
+        table = PrettyTable(
+            ["page", "name", "link"])
+        for element in data_to_print:
+            table.add_row(
+                [element['page'], element['name_image'], element['link_image']])
 
-# example
-# declaring site to get using the crawler
-# elixir_website = Crawler('https://elixir-lang.org/')
+        save_file.write(table.get_string(start=1, end=20))
+        save_file.close()
 
-# using the method crawl to get data
-# data = elixir_website.crawl()
+
+# # example
+# declaring url to get using the crawler
+url = 'https://elixir-lang.org/'
+elixir_website = Crawler(url)
+
+# using the method crawl to get and format data
+data_to_json = elixir_website.draw('my_data.txt', 1, 4)
