@@ -19,8 +19,8 @@ In file `run.py` in should set a site to crawl, like the example in line 50 of t
     url_to_scrape = 'https://elixir-lang.org/'
     new_crawler = Crawler(url_to_scrape)
 
-    # set the filename with the format, like "txt"
-    new_crawler.storage_assets('my_scraped_data.txt')
+    # set the filenames with the format, like "txt"
+    new_crawler.storage_data('my_scraped_data.txt','my_scraped_data1.txt')
 
 ```
 
@@ -28,7 +28,7 @@ In file `run.py` in should set a site to crawl, like the example in line 50 of t
 
 Make sure you have installed all the dependencies. Run the file:
 
-`$ python main.py`.
+`$ python run.py`.
 
 ## Result
 
