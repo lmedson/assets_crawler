@@ -23,8 +23,8 @@ class Crawler():
     def get_urls_map(self):
         urls_to_crawl = self.list_links.copy()
         crawled_list = []
-        while len(urls_to_crawl) != 0:
-            current_url = urls_to_crawl[0]
+        while len(self.list_links) != 0:
+            current_url = self.list_links[0]
             if current_url not in crawled_list:
                 links_relateds = []
                 try:
@@ -40,21 +40,23 @@ class Crawler():
                     # check if found url belongs to base url
                     filtered_url = self.filter_url(found_url, self.url)
                     if filtered_url != None and filtered_url not in links_relateds:
+                        # print(filtered_url)
                         """
                         if filtered belongs to base url, and not yet in current
                         crawled url, push to array with relashionships
                         """
                         links_relateds.append(filtered_url)
                         # if the found url yet not crawled, push to array to craw
-                        if filtered_url not in crawled_list and filtered_url not in urls_to_crawl:
+                        if filtered_url not in crawled_list and filtered_url not in self.list_links:
                             # add found url inside current_url to crawl list
-                            urls_to_crawl.append(filtered_url)
+                            self.list_links.append(filtered_url)
                         else:
                             pass
                 self.relation_links.append(
                     {'page': current_url, 'related_links': links_relateds})
-                urls_to_crawl.pop(urls_to_crawl.index(current_url))
+                self.list_links.pop(self.list_links.index(current_url))
             else:
+                print(crawled_list)
                 self.crawled = crawled_list
                 return print("Crawling finished")
 
@@ -64,16 +66,20 @@ class Crawler():
 
     def crawl_assets(self):
         # get urls
-        for page in self.list_links:
-            new_req = urllib.request.urlopen(page)
-            new_soup = BeautifulSoup(
-                new_req, features='lxml')
+        self.get_urls_map()
+        for element in self.relation_links:
+            try:
+                new_req = urllib.request.urlopen(element["page"])
+                new_soup = BeautifulSoup(
+                    new_req, features='lxml')
+            except:
+                pass
             for index in new_soup.find_all('img'):
                 alt = index.get('alt')
                 src = index.get('src')
                 filtered_url = self.filter_url(src, self.url)
                 self.assets_map.append(
-                    {'page': page,  'images': {'name_image': alt, 'link_image': filtered_url}, 'css': [], 'js': []})
+                    {'page': element["page"],  'images': {'name_image': alt, 'link_image': filtered_url}, 'css': [], 'js': []})
         # get css
         for key in range(len(self.assets_map)):
             for index_css in new_soup.find_all('link'):
