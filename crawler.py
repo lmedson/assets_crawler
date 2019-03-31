@@ -40,7 +40,6 @@ class Crawler():
                     # check if found url belongs to base url
                     filtered_url = self.filter_url(found_url, self.url)
                     if filtered_url != None and filtered_url not in links_relateds:
-                        # print(filtered_url)
                         """
                         if filtered belongs to base url, and not yet in current
                         crawled url, push to array with relashionships
